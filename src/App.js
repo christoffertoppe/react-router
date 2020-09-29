@@ -1,29 +1,3 @@
-/*import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App; */
 
 import React from 'react'
 import {
@@ -34,34 +8,30 @@ import {
 import Add from './components/Add'
 import Home from './components/Home'
 import List from './components/List'
+import axios from 'axios';
+import { useState, useEffect } from 'react'
 
-/*const Notes = () => {
 
-    return(
-        <div>
-            <p>Valinta 1.</p>
-        </div>
-    )
-} */
 
-/*const Users = () => {
-
-    return(
-        <div>
-            <p>Valinta 2.</p>
-        </div>
-    )
-}*/
-
-/*const Home = () => {
-    return(
-        <div>
-            <p>Koti</p>
-        </div>
-    )
-}*/
 
 const App = () => {
+
+    const [events, setEvents] = useState([]);
+    useEffect(()=> {
+        GetList()
+    },[])
+
+
+    function GetList() {
+        axios.get('http://localhost:3002/notes').then(response => {
+            const events = response.data
+            console.log(events)
+            setEvents(events)
+        })
+    }
+
+
+
 
     const padding = {
         padding: 5
@@ -70,7 +40,7 @@ const App = () => {
     return (
         <div className="container">
             <Router>
-                <div>
+                <div id="valikko">
                     <Link style={padding} to="/">home</Link>
                     <Link style={padding} to="/add">add</Link>
                     <Link style={padding} to="/list">list</Link>
@@ -78,10 +48,10 @@ const App = () => {
 
                 <Switch>
                     <Route path="/add">
-                        <Add />
+                        <Add events={setEvents}/>
                     </Route>
                     <Route path="/list">
-                        <List />
+                        <List events={events}/>
                     </Route>
                     <Route path="/">
                         <Home />
